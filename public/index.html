@@ -4,12 +4,76 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Islamic prayers ramadan project</title>
 </head>
 <body>
-    <p>Hello World!</p>
+   <header>
+    <h1>Prayer Times</h1>
+    <button id="theme_switch"><i class="material-icons">wb_sunny</i></button>
+   </header>
 
+   <main>
+        <form>
+            <input type="text" placeholder="Enter city name" name="city" id="city_prayer" required>
+            <button type="submit">
+                <i class="material-icons">search</i>
+            </button>
+        </form>
+
+        <h3 id="current_city">London</h3>
+        <p id="misc_date">01 Mar 2025 | 01-09-1446 Ramadān 1446</p>
+
+        <div id="prayer_times">
+            <div>
+            <h4><i class="material-icons">bedtime</i> Fajr</h4>
+            <p>05:00</p>
+            </div>
+            <div>
+            <h4><i class="material-icons">wb_sunny</i> Sunrise</h4>
+            <p>06:00</p>
+            </div>
+            <div>
+            <h4><i class="material-icons">light_mode</i> Dhuhr</h4>
+            <p>13:00</p>
+            </div>
+            <div>
+            <h4><i class="material-icons">wb_twilight</i> Asr</h4>
+            <p>16:00</p>
+            </div>
+            <div>
+            <h4><i class="material-icons">nights_stay</i> Maghrib</h4>
+            <p>18:00</p>
+            </div>
+            <div>
+            <h4><i class="material-icons">dark_mode</i> Isha</h4>
+            <p>20:00</p>
+            </div>
+        </div>
+   </main>
+        <footer>
+            Prayer times are calculated based on the city location.
+            Data provided bv Aladhan API
+        </footer>
+
+        <!-- SCRIPT LATO CLIENT  -->
+        <script>
+            const theme_switch = document.getElementById("theme_switch");
+
+            theme_switch.addEventListener("click", () => {
+
+
+                if(document.documentElement.classList.contains('light_theme')){
+                    theme_switch.innerHTML = '<i class="material-icons">wb_sunny</i>';
+                    document.documentElement.classList.remove('light_theme');
+                } else {
+                    
+                    theme_switch.innerHTML = '<i class="material-icons">bedtime</i>';
+                    document.documentElement.classList.add('light_theme');
+                }
+            })
+        </script>
 
      <script src="../index.js"></script>
 </body>

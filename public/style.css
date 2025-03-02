@@ -1,3 +1,176 @@
+:root {
+
+    --background: rgb(17 24 39);
+    --secondary: rgb(31 41 55);
+    --tertiary: rgb(55 65 81);
+    --buttons: rgb(59 130 246);
+}
+
 body {
     font-family: Arial, sans-serif;
+    background-color: var(--background);
+    color: white; 
+    max-width: 30rem;
+    margin: 0 auto;  
+}
+
+header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+#theme_switch {
+
+    background-color: transparent;
+    border: 0;
+    color: white;
+    cursor: pointer;
+}
+
+main {
+
+    background-color: var(--secondary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+
+#prayer_times div {
+
+    background-color: var(--tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    padding: 0rem 1rem;
+}
+
+#prayer_times p {
+
+    font-weight: bold;
+}
+
+form {
+
+    display: flex;
+    margin-top: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+
+form input {
+
+    background-color: var(--tertiary);
+    color: white;
+    padding: 0.8rem;
+    border: 1px solid gray;
+    border-radius: 0.5rem 0 0 0.5rem;
+    width: 100%;
+}
+
+form input::placeholder {
+
+    font-size: 1rem;
+}
+
+form button {
+
+    background-color: var(--buttons);
+    color: white;
+    padding: 0.5rem;
+    border:0;
+    border-radius: 0 0.5rem 0.5rem 0;
+    cursor: pointer;
+}
+
+#current_city, #misc_date, footer {
+
+    text-align: center;
+}
+
+#misc_date, footer {
+
+    color: gray;
+}
+
+footer {
+
+    margin: 1rem;
+}
+
+h4 {
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* LIGHT THEME STYLES */    
+
+.light_theme {
+
+    --background: rgb(255 255 255);
+    --secondary: rgb(240 240 240);
+    --tertiary: rgb(220 220 220);
+    --buttons: rgb(59 130 246);
+}
+
+
+.light_theme body {
+
+    background-color: var(--background);
+    color: black;
+}
+
+.light_theme #prayer_times div {
+
+    background-color: var(--tertiary);
+}
+
+.light_theme #prayer_times p {
+
+    font-weight: bold;
+}
+
+.light_theme form input {
+
+    background-color: var(--tertiary);
+    color: black;
+    border: 1px solid gray;
+}
+
+.light_theme form button {
+
+    background-color: var(--buttons);
+    color: black;
+}
+
+.light_theme #current_city, .light_theme #misc_date, .light_theme footer {
+
+    color: gray;
+}
+
+.light_theme footer {
+
+    margin: 1rem;
+}
+
+.light_theme h4 {
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.light_theme #theme_switch {
+
+    background-color: transparent;
+    border: 0;
+    color: black;
+    cursor: pointer;
 }
