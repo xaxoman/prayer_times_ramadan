@@ -17,7 +17,7 @@
    <main>
         <form>
             <input type="text" placeholder="Enter city name" name="city" id="city_prayer" required>
-            <button type="submit">
+            <button id="request_prayers" type="submit">
                 <i class="material-icons">search</i>
             </button>
         </form>
@@ -26,39 +26,40 @@
         <p id="misc_date">01 Mar 2025 | 01-09-1446 Ramadān 1446</p>
 
         <div id="prayer_times">
-            <div>
+            <div id="fajr">
             <h4><i class="material-icons">bedtime</i> Fajr</h4>
-            <p>05:00</p>
+            <p id="fajr_time">05:00</p>
             </div>
-            <div>
+            <div id="sunrise">
             <h4><i class="material-icons">wb_sunny</i> Sunrise</h4>
-            <p>06:00</p>
+            <p id="sunrise_time">06:00</p>
             </div>
-            <div>
+            <div id="dhuhr">
             <h4><i class="material-icons">light_mode</i> Dhuhr</h4>
-            <p>13:00</p>
+            <p id="dhuhr_time">13:00</p>
             </div>
-            <div>
+            <div id="asr">
             <h4><i class="material-icons">wb_twilight</i> Asr</h4>
-            <p>16:00</p>
+            <p id="asr_time">16:00</p>
             </div>
-            <div>
+            <div id="maghrib">
             <h4><i class="material-icons">nights_stay</i> Maghrib</h4>
-            <p>18:00</p>
+            <p id="maghrib_time">18:00</p>
             </div>
-            <div>
+            <div id="isha">
             <h4><i class="material-icons">dark_mode</i> Isha</h4>
-            <p>20:00</p>
+            <p id="isha_time">20:00</p>
             </div>
         </div>
    </main>
         <footer>
             Prayer times are calculated based on the city location.
-            Data provided bv Aladhan API
+            Data provided bv <a target="_blank" href="https://aladhan.com/prayer-times-api">Aladhan API</a>
         </footer>
 
         <!-- SCRIPT LATO CLIENT  -->
         <script>
+            /* Theme switcher */
             const theme_switch = document.getElementById("theme_switch");
 
             theme_switch.addEventListener("click", () => {
@@ -73,8 +74,127 @@
                     document.documentElement.classList.add('light_theme');
                 }
             })
+
+            /* Get prayer times by sending a request to the /prayers endpoint */
+
+            const request_prayers = document.getElementById("request_prayers");
+
+            request_prayers.addEventListener("click", async (e) => {
+                e.preventDefault(); // Previene il comportamento predefinito del form
+
+                try {
+
+                   const city = document.getElementById("city_prayer").value;
+                   const country = ""; // Non ho bisogno di un paese per la richiesta ma devo passare il parametro
+
+                    const response = await fetch(`/prayers?city=${city}&country=${country}`);
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    const searched_city = document.getElementById("current_city"); // imposto il nome della città cercata
+                    searched_city.textContent = city;     
+
+                    const misc_date = document.getElementById("misc_date");
+                    misc_date.textContent = data.date;
+                    
+                    // imposto gli orari
+                    const fajr_time = document.getElementById("fajr_time");
+                    fajr_time.textContent = data.timings.Fajr;
+
+                    const sunrise_time = document.getElementById("sunrise_time");
+                    sunrise_time.textContent = data.timings.Sunrise;
+
+                    const dhuhr_time = document.getElementById("dhuhr_time");
+                    dhuhr_time.textContent = data.timings.Dhuhr;
+
+                    const asr_time = document.getElementById("asr_time");
+                    asr_time.textContent = data.timings.Asr;
+
+                    const maghrib_time = document.getElementById("maghrib_time");
+                    maghrib_time.textContent = data.timings.Maghrib;
+
+                    const isha_time = document.getElementById("isha_time");
+                    isha_time.textContent = data.timings.Isha;
+
+                    // Update the current prayer highlight after loading new prayer times
+                    highlightCurrentPrayer();
+                    
+                } catch (error) {
+                    
+                     // Gestione degli errori
+                    console.error('Errore:', error);
+                    alert('Città non trovata o errore nel caricamento dei dati');
+                }
+            })
+            
+            // Function to highlight the current prayer time
+            function highlightCurrentPrayer() {
+                // Get current time
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinute = now.getMinutes();
+                const currentTime = currentHour * 60 + currentMinute; // Convert to minutes for easier comparison
+                
+                // Get all prayer times
+                const prayers = [
+                    { id: "fajr", time: document.getElementById("fajr_time").textContent },
+                    { id: "sunrise", time: document.getElementById("sunrise_time").textContent },
+                    { id: "dhuhr", time: document.getElementById("dhuhr_time").textContent },
+                    { id: "asr", time: document.getElementById("asr_time").textContent },
+                    { id: "maghrib", time: document.getElementById("maghrib_time").textContent },
+                    { id: "isha", time: document.getElementById("isha_time").textContent }
+                ];
+                
+                // Remove current-prayer class from all prayers
+                prayers.forEach(prayer => {
+                    document.getElementById(prayer.id).classList.remove("current-prayer");
+                });
+                
+                // Convert prayer times to minutes and find the current or next prayer
+                let currentPrayerIndex = -1;
+                prayers.forEach((prayer, index) => {
+                    // Convert "HH:MM" format to minutes
+                    const [hours, minutes] = prayer.time.split(":").map(num => parseInt(num));
+                    const prayerTimeInMinutes = hours * 60 + minutes;
+                    
+                    if (index === 0) {
+                        // If current time is before Fajr or after Isha
+                        if (currentTime < prayerTimeInMinutes || 
+                            currentTime >= prayers[prayers.length-1].time.split(":").map(num => parseInt(num))[0] * 60 + 
+                                         prayers[prayers.length-1].time.split(":").map(num => parseInt(num))[1]) {
+                            currentPrayerIndex = 0; // Fajr is the next prayer (or current if before sunrise)
+                        }
+                    }
+                    
+                    // If current time is between this prayer and the next prayer
+                    if (index < prayers.length - 1) {
+                        const [nextHours, nextMinutes] = prayers[index + 1].time.split(":").map(num => parseInt(num));
+                        const nextPrayerTimeInMinutes = nextHours * 60 + nextMinutes;
+                        
+                        if (currentTime >= prayerTimeInMinutes && currentTime < nextPrayerTimeInMinutes) {
+                            currentPrayerIndex = index;
+                        }
+                    } else if (index === prayers.length - 1 && currentTime >= prayerTimeInMinutes) {
+                        // If it's after Isha
+                        currentPrayerIndex = index;
+                    }
+                });
+                
+                // Apply current-prayer class to the current prayer
+                if (currentPrayerIndex >= 0) {
+                    document.getElementById(prayers[currentPrayerIndex].id).classList.add("current-prayer");
+                }
+            }
+            
+            // Call the function when the page loads
+            document.addEventListener("DOMContentLoaded", highlightCurrentPrayer);
+            
+            // Update the highlight every minute
+            setInterval(highlightCurrentPrayer, 60000);
         </script>
 
-     <script src="../index.js"></script>
 </body>
 </html>

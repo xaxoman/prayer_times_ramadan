@@ -63,7 +63,7 @@ form {
 }
 
 
-form input {
+form input:first-child {
 
     background-color: var(--tertiary);
     color: white;
@@ -174,3 +174,28 @@ h4 {
     color: black;
     cursor: pointer;
 }
+
+
+a {
+    color: gray;
+}
+
+/* Add this CSS class for the current prayer time - remove duplicates and ensure specificity */
+.current-prayer {
+  background-color: rgb(55, 99, 114) !important;  /* Use !important to override other styles */
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* If you have a dark theme, add a specific style for it */
+.light_theme .current-prayer {
+  background-color: #87ceeb !important; /* A slightly darker blue for light theme */
+}
+
+/* Style for the current prayer icon */
+.current-prayer i.material-icons {
+  color: #00bfff;
+}
+
+
